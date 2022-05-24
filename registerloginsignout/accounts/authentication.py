@@ -62,8 +62,7 @@ class ObtainAuthToken(APIView):
             return Response({"message": "you should logout first"}, status=status.HTTP_403_FORBIDDEN)
         else:
             token, created = Token.objects.get_or_create(user=user)
-            uls = Userloginsignout.objects.create(user=user)
-            uls.login_date = datetime.datetime.now()
+            uls = Userloginsignout.objects.create(user=user, login_date=datetime.datetime.now())
             uls.save()
             return Response({'token': token.key})
 
