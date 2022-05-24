@@ -17,7 +17,14 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
+class UserInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name')
+
+
 class UserLoginSignoutSerializer(serializers.ModelSerializer):
+    user = UserInfoSerializer()
 
     class Meta:
         model = Userloginsignout
