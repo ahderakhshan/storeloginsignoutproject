@@ -25,7 +25,15 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
 class UserLoginSignoutSerializer(serializers.ModelSerializer):
     user = UserInfoSerializer()
-
+    login_length=serializers.SerializerMethodField('get_login_length')
     class Meta:
         model = Userloginsignout
-        fields = ('user', 'login_date', 'signout_date')
+        fields = ('user', 'login_date', 'signout_date', 'login_length')
+
+    def get_login_length(self, userloginsignout):
+        length = userloginsignout.signout_date-userloginsignout.login_date
+        total_seconds = length.total_seconds()
+        hour = int(total_seconds/3600)
+        minute = int((total_seconds-hour*3600)/60)
+        second = total_seconds-(hour*3600)-(minute*60)
+        return (hour,minute,second)

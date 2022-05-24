@@ -65,3 +65,28 @@ class UserActivity(generics.ListAPIView):
         except:
             raise ValidationError(detail="no user with this username")
         return Userloginsignout.objects.filter(user=user)
+
+
+class UserActivityInDate(generics.ListAPIView):
+    queryset = Userloginsignout.objects.all()
+    serializer_class = UserLoginSignoutSerializer
+    permission_classes = [IsAdminUser, ]
+    pagination_class = StandardResultsSetPagination
+
+    def get_queryset(self):
+        try:
+            username = self.request.query_params['username']
+        except:
+            raise ValidationError(detail="no username in query parameter")
+        try:
+            year = self.request.query_params['year']
+            month = self.request.query_params['month']
+            day = self.request.query_params['day']
+        except:
+            raise ValidationError(detail="no date in query parameter")
+        try:
+            user = User.objects.get(username=username)
+        except:
+            raise ValidationError(detail="no user with this username")
+        return Userloginsignout.objects.filter(user=user, login_date__year=year, login_date__month=month
+                                               , login_date__day=day)
