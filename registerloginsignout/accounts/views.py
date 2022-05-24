@@ -43,7 +43,7 @@ class StandardResultsSetPagination(PageNumberPagination):
 
 
 class AllActivities(generics.ListAPIView):
-    queryset = Userloginsignout.objects.all()
+    queryset = Userloginsignout.objects.filter(user__is_superuser=False)
     serializer_class = UserLoginSignoutSerializer
     permission_classes = [IsAdminUser, ]
     pagination_class = StandardResultsSetPagination

@@ -58,7 +58,7 @@ class ObtainAuthToken(APIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
-        if Token.objects.filter(user=user).exists():
+        if Token.objects.filter(user=user).exists() and user:
             return Response({"message": "you should logout first"}, status=status.HTTP_403_FORBIDDEN)
         else:
             token, created = Token.objects.get_or_create(user=user)
