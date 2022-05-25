@@ -1,10 +1,11 @@
 from django.shortcuts import render
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 from .serializers import UserSerializer, UserLoginSignoutSerializer
 from rest_framework.response import Response
-from rest_framework import status, generics
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework import status, generics, filters
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from .models import Userloginsignout, User
 from rest_framework.exceptions import ValidationError
 import datetime
@@ -90,3 +91,17 @@ class UserActivityInDate(generics.ListAPIView):
             raise ValidationError(detail="no user with this username")
         return Userloginsignout.objects.filter(user=user, login_date__year=year, login_date__month=month
                                                , login_date__day=day)
+
+
+class AdvanceSearchUsersActivities(generics.ListAPIView):
+    queryset = Userloginsignout.objects.filter(user__is_superuser=False)
+    serializer_class = UserLoginSignoutSerializer
+    permission_classes = [AllowAny, ]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = {'user__username': ['contains', 'exact'], 'login_date': ['gte', ]
+        , 'signout_date': ['lte', ]}
+
+
+    def list(self, request, *args, **kwargs):
+        objs = super().list(request, *args, **kwargs)
+        return objs
