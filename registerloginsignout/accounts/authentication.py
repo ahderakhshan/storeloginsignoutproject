@@ -1,5 +1,4 @@
 import datetime
-
 from rest_framework import parsers, renderers, status
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
