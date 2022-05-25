@@ -27,14 +27,21 @@ class UserLogout(APIView):
     permission_classes = [IsAuthenticated, ]
 
     def post(self, request):
-        request.user.auth_token.delete()
-        uls = Userloginsignout.objects.filter(user=request.user).last()
-        uls.signout_date = datetime.datetime.now()
-        uls.save()
-        return Response(
-            data={'message': 'logout successful'},
-            status=status.HTTP_204_NO_CONTENT
-        )
+        if not request.user.is_superuser:
+            request.user.auth_token.delete()
+            uls = Userloginsignout.objects.filter(user=request.user).last()
+            uls.signout_date = datetime.datetime.now()
+            uls.save()
+            return Response(
+                data={'message': 'logout successful'},
+                status=status.HTTP_204_NO_CONTENT
+            )
+        else:
+            request.user.auth_token.delete()
+            return Response(
+                data={'message': 'logout successful'},
+                status=status.HTTP_204_NO_CONTENT
+            )
 
 
 class StandardResultsSetPagination(PageNumberPagination):

@@ -2,6 +2,7 @@ from django.urls import path
 #from rest_framework.authtoken import views as tokenviews
 from .views import CreateUser, UserLogout, AllActivities, UserActivity, UserActivityInDate, AdvanceSearchUsersActivities
 from .authentication import obtain_auth_token
+from .authentication2 import obtain_auth_token2
 
 
 urlpatterns = [
@@ -12,4 +13,5 @@ urlpatterns = [
     path('useractivity/', UserActivity.as_view()),
     path('useractivityindate/', UserActivityInDate.as_view()),
     path('advancesearch/', AdvanceSearchUsersActivities.as_view()),
+    path('loginmanager/', obtain_auth_token2)
 ]

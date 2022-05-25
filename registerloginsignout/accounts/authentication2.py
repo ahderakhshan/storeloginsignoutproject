@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from .models import Userloginsignout
 
 
-class ObtainAuthToken(APIView):
+class ObtainAuthToken2(APIView):
     throttle_classes = ()
     permission_classes = ()
     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
@@ -57,15 +57,11 @@ class ObtainAuthToken(APIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
-        if Token.objects.filter(user=user).exists():
-            return Response({"message": "you should logout first"}, status=status.HTTP_403_FORBIDDEN)
-        elif not user.is_superuser:
+        if user.is_superuser:
             token, created = Token.objects.get_or_create(user=user)
-            uls = Userloginsignout.objects.create(user=user, login_date=datetime.datetime.now())
-            uls.save()
             return Response({'token': token.key})
         else:
-            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            return Response({'message': "you are not a superuser"}, status=status.HTTP_403_FORBIDDEN)
 
 
-obtain_auth_token = ObtainAuthToken.as_view()
+obtain_auth_token2 = ObtainAuthToken2.as_view()
