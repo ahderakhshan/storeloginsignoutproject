@@ -8,6 +8,7 @@ from rest_framework.schemas import ManualSchema
 from rest_framework.schemas import coreapi as coreapi_schema
 from rest_framework.views import APIView
 from .models import Userloginsignout
+import pytz
 
 
 class ObtainAuthToken(APIView):
@@ -54,6 +55,7 @@ class ObtainAuthToken(APIView):
         return self.serializer_class(*args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        tz = pytz.timezone('Asia/Tehran')
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
@@ -61,7 +63,7 @@ class ObtainAuthToken(APIView):
             return Response({"message": "you should logout first"}, status=status.HTTP_403_FORBIDDEN)
         elif not user.is_superuser:
             token, created = Token.objects.get_or_create(user=user)
-            uls = Userloginsignout.objects.create(user=user, login_date=datetime.datetime.now())
+            uls = Userloginsignout.objects.create(user=user, login_date=datetime.datetime.now(tz))
             uls.save()
             return Response({'token': token.key})
         else:
