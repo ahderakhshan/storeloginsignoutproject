@@ -79,6 +79,7 @@ WSGI_APPLICATION = 'registerloginsignout.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# change code below to use postgresql
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
