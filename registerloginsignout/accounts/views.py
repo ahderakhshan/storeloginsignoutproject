@@ -47,24 +47,24 @@ class UserLogout(APIView):
             )
 
 
-class StandardResultsSetPagination(PageNumberPagination):
-    page_size = 50
-    page_size_query_param = 'page_size'
-    max_page_size = 10000
+# class StandardResultsSetPagination(PageNumberPagination):
+#     page_size = 50
+#     page_size_query_param = 'page_size'
+#     max_page_size = 10000
 
 
 class AllActivities(generics.ListAPIView):
     queryset = Userloginsignout.objects.filter(user__is_superuser=False).order_by('-login_date')
     serializer_class = UserLoginSignoutSerializer
     permission_classes = [IsAdminUser, ]
-    pagination_class = StandardResultsSetPagination
+    # pagination_class = StandardResultsSetPagination
 
 
 class UserActivity(generics.ListAPIView):
     queryset = Userloginsignout.objects.all().order_by('-login_date')
     serializer_class = UserLoginSignoutSerializer
     permission_classes = [IsAdminUser, ]
-    pagination_class = StandardResultsSetPagination
+    # pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
         try:
@@ -82,7 +82,7 @@ class UserActivityInDate(generics.ListAPIView):
     queryset = Userloginsignout.objects.all().order_by('-login_date')
     serializer_class = UserLoginSignoutSerializer
     permission_classes = [IsAdminUser, ]
-    pagination_class = StandardResultsSetPagination
+    # pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
         try:
